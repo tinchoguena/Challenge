@@ -1,7 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Button, Image, StyleSheet, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
+
 const DrinksScreen = props => {
   const drinkText = props.navigation.getParam('nameKey');
   const [drinks, setDrinks] = useState(undefined);
@@ -65,7 +73,19 @@ const DrinksScreen = props => {
   );
 };
 DrinksScreen.navigationOptions = {
-  headerTitle: 'Drinks List',
+  headerTitle: (
+    <TextInput
+      placeholder="Search"
+      style={{
+        height: 40,
+        borderColor: 'white',
+        borderWidth: 1,
+        width: '90%',
+        borderRadius: 4,
+        backgroundColor: 'white',
+      }}
+    />
+  ),
   headerStyle: {
     backgroundColor: Colors.primaryColor,
   },
@@ -100,6 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.primaryColor,
+    color: 'white',
   },
   imgTitle: {
     flex: 1,
@@ -110,6 +131,10 @@ const styles = StyleSheet.create({
     color: '#323030',
     marginTop: 40,
     marginLeft: 20,
+  },
+  input: {
+    width: '80%',
+    textAlign: 'center',
   },
 });
 export default DrinksScreen;
