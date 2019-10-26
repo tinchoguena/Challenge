@@ -31,7 +31,11 @@ const StartScreen = props => {
     </View>
   );
 };
-
+StartScreen.navigationOptions = {
+  headerStyle: {
+    backgroundColor: Colors.primaryColor,
+  },
+};
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
