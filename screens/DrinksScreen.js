@@ -11,38 +11,33 @@ import {FlatList} from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
 
 const DrinksScreen = props => {
-  const drinkText = props.navigation.getParam('nameKey');
   const [drinks, setDrinks] = useState(undefined);
-  const [loading, setLoading] = useState(true);
-  const [dataStatus, setDataStatus] = useState(false);
-  useEffect(() => {
-    fetch(
-      `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${drinkText}`,
-    )
+  const [loading, setLoading] = useState(false);
+
+  const handleTextChange = text => {
+    if (text.length < 3) {
+      return;
+    }
+    setLoading(true);
+    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${text}`)
       .then(response => response.json())
       .then(drinksObj => {
-        setDrinks(drinksObj.drinks);
-        //console.log(drinksObj.drinks[0]);
-        setDataStatus(true);
-      });
-  }, [drinkText]);
-
-  const drinksData = [];
-
-  if (dataStatus) {
-    const setListsItem = () => {
-      Object.values(drinks).forEach(value => {
-        drinksData.push({
-          name: value.strDrink,
-          img: value.strDrinkThumb,
-          id: value.idDrink,
+        const drinksArr = drinksObj.drinks.map(drink => {
+          return {
+            id: drink.idDrink,
+            name: drink.strDrink,
+            img: drink.strDrinkThumb,
+          };
         });
+        setDrinks(drinksArr);
+        setLoading(false);
       });
-    };
-    setListsItem();
-  }
-
+  };
+  useEffect(() => {
+    handleTextChange('vodka');
+  }, []);
   const renderList = itemData => {
+    console.log(drinks);
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -62,16 +57,17 @@ const DrinksScreen = props => {
   };
   return (
     <View style={styles.screen}>
-      {dataStatus ? (
-        <FlatList data={drinksData} renderItem={renderList} />
-      ) : (
-        <View style={styles.Loading}>
-          <Text>Loading...</Text>
+      {loading ? (
+        <View style={styles.loadingWapper}>
+          <Text style={styles.loadingText}>Loading...</Text>
         </View>
+      ) : (
+        <FlatList data={drinks} renderItem={renderList} />
       )}
     </View>
   );
 };
+
 DrinksScreen.navigationOptions = {
   headerTitle: (
     <TextInput
@@ -83,6 +79,9 @@ DrinksScreen.navigationOptions = {
         width: '90%',
         borderRadius: 4,
         backgroundColor: 'white',
+      }}
+      onChangeText={() => {
+        // handleAction;
       }}
     />
   ),
@@ -115,12 +114,16 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'flex-start',
   },
-  Loading: {
-    flex: 1,
-    justifyContent: 'center',
+  loadingText: {
+    color: 'black',
+    fontSize: 24,
+  },
+  loadingWapper: {
+    height: '100%',
+    width: '100%',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: Colors.primaryColor,
-    color: 'white',
   },
   imgTitle: {
     flex: 1,

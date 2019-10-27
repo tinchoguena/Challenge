@@ -1,36 +1,28 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
-import Input from '../components/Input';
 const StartScreen = props => {
-  const [drinkText, setDrinkTest] = useState('');
   return (
     <View style={styles.screen}>
       <View style={styles.title}>
-        <Text style={styles.title}>Cocktail</Text>
-        <Text style={styles.title2}>Finder</Text>
+        <Text style={styles.titleBold}>Cocktail</Text>
+        <Text style={styles.titleLight}>Finder</Text>
       </View>
-
-      <Input
-        style={styles.input}
-        blurOnSubmit
-        placeholder="Search your favourite cocktail!"
-        onChangeText={text => setDrinkTest(text)}
-        value={drinkText}
-      />
-      <Button
-        color={'white'}
-        title="Get them!"
-        onPress={() => {
-          props.navigation.navigate({
-            routeName: 'Drinks',
-            params: {nameKey: drinkText},
-          });
-        }}
-      />
+      <View style={styles.containerStyle}>
+        <Button
+          color={Colors.accentColor}
+          title="Search your favourite cocktail!"
+          onPress={() => {
+            props.navigation.navigate({
+              routeName: 'Drinks',
+            });
+          }}
+        />
+      </View>
     </View>
   );
 };
+
 StartScreen.navigationOptions = {
   headerStyle: {
     backgroundColor: Colors.primaryColor,
@@ -43,17 +35,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.primaryColor,
   },
-  input: {
+  containerStyle: {
+    height: 45,
     width: '80%',
-    textAlign: 'center',
+    overflow: 'hidden',
+    borderRadius: 8,
+    backgroundColor: 'white',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 24,
     color: 'white',
     fontWeight: '800',
     flexDirection: 'row',
+    margin: 15,
   },
-  title2: {
+  titleBold: {
+    fontSize: 24,
+    color: 'white',
+    fontWeight: '800',
+    flexDirection: 'row',
+  },
+  titleLight: {
     fontSize: 24,
     color: 'white',
     fontWeight: '400',
