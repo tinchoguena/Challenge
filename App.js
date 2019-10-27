@@ -1,11 +1,7 @@
 import React from 'react';
-import DrinksNavigatior from './navigation/DrinksNavigation';
+import DrinksNavigator from './navigation/DrinksNavigation';
 
 const App = () => {
-  return (
-    <>
-      <DrinksNavigatior />
-    </>
-  );
+  return <DrinksNavigator />;
 };
 export default App;
