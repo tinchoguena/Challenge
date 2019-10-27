@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   View,
   Text,
@@ -9,11 +11,13 @@ import {
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
+import addDrinkList from '../store/actions/drinks';
 
 const DrinksScreen = props => {
   const [drinks, setDrinks] = useState(undefined);
   const [loading, setLoading] = useState(false);
-
+  const storeDrinks = useSelector(state => state.drinks);
+  const dispatch = useDispatch();
   const handleTextChange = text => {
     if (text.length < 3) {
       return;
@@ -29,15 +33,18 @@ const DrinksScreen = props => {
             img: drink.strDrinkThumb,
           };
         });
-        setDrinks(drinksArr);
+        dispatch(addDrinkList(drinksArr));
+        //setDrinks(drinksArr);
         setLoading(false);
       });
   };
+
   useEffect(() => {
-    handleTextChange('vodka');
+    props.navigation.setParams({handleTextChange});
   }, []);
+
   const renderList = itemData => {
-    console.log(drinks);
+    console.log(storeDrinks);
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -58,17 +65,15 @@ const DrinksScreen = props => {
   return (
     <View style={styles.screen}>
       {loading ? (
-        <View style={styles.loadingWapper}>
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
+        <Text style={styles.loadingText}>Loading...</Text>
       ) : (
-        <FlatList data={drinks} renderItem={renderList} />
+        <FlatList data={storeDrinks} renderItem={renderList} />
       )}
     </View>
   );
 };
 
-DrinksScreen.navigationOptions = {
+DrinksScreen.navigationOptions = ({navigation}) => ({
   headerTitle: (
     <TextInput
       placeholder="Search"
@@ -80,18 +85,20 @@ DrinksScreen.navigationOptions = {
         borderRadius: 4,
         backgroundColor: 'white',
       }}
-      onChangeText={() => {
-        // handleAction;
-      }}
+      onChangeText={navigation.getParam('handleTextChange')}
     />
   ),
   headerStyle: {
     backgroundColor: Colors.primaryColor,
   },
-};
+});
+
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.primaryColor,
+    flex: 1,
+    alignItems: 'stretch',
+    justifyContent: 'center',
   },
   container: {
     justifyContent: 'space-between',
@@ -117,13 +124,6 @@ const styles = StyleSheet.create({
   loadingText: {
     color: 'black',
     fontSize: 24,
-  },
-  loadingWapper: {
-    height: '100%',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.primaryColor,
   },
   imgTitle: {
     flex: 1,
