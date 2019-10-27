@@ -4,10 +4,11 @@ const initialState = {
 };
 
 const drinksReducer = (state = initialState, action) => {
-  if (action == ADD_DRINKLIST) {
+  if (action.type === ADD_DRINKLIST) {
     return {...state, drinks: action.drinkList};
+  } else {
+    return state;
   }
-  return state;
 };
 
 export default drinksReducer;

@@ -16,7 +16,7 @@ import addDrinkList from '../store/actions/drinks';
 const DrinksScreen = props => {
   const [drinks, setDrinks] = useState(undefined);
   const [loading, setLoading] = useState(false);
-  const storeDrinks = useSelector(state => state.drinks);
+  const storeDrinks = useSelector(state => state.drinksReducer.drinks);
   const dispatch = useDispatch();
   const handleTextChange = text => {
     if (text.length < 3) {
