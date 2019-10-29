@@ -8,16 +8,18 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
+  Button,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
-import addDrinkList from '../store/actions/drinks';
+import {addDrinkList} from '../store/actions/drinks';
+import {deleteDrinkList} from '../store/actions/drinks';
 
 const DrinksScreen = props => {
-  const [drinks, setDrinks] = useState(undefined);
   const [loading, setLoading] = useState(false);
-  const storeDrinks = useSelector(state => state.drinksReducer.drinks);
+  const storeDrinks = useSelector(state => state.drinks);
   const dispatch = useDispatch();
+
   const handleTextChange = text => {
     if (text.length < 3) {
       return;
@@ -34,17 +36,21 @@ const DrinksScreen = props => {
           };
         });
         dispatch(addDrinkList(drinksArr));
-        //setDrinks(drinksArr);
         setLoading(false);
       });
   };
 
+  const deleteDrinkListAction = () => {
+    dispatch(deleteDrinkList([]));
+  };
+
   useEffect(() => {
     props.navigation.setParams({handleTextChange});
+    props.navigation.setParams({deleteDrinkListAction});
+    props.navigation.setParams({});
   }, []);
 
   const renderList = itemData => {
-    console.log(storeDrinks);
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -86,6 +92,13 @@ DrinksScreen.navigationOptions = ({navigation}) => ({
         backgroundColor: 'white',
       }}
       onChangeText={navigation.getParam('handleTextChange')}
+    />
+  ),
+  headerRight: () => (
+    <Button
+      onPress={navigation.getParam('deleteDrinkListAction')}
+      title="Cancel"
+      color="white"
     />
   ),
   headerStyle: {
