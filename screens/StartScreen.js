@@ -1,14 +1,20 @@
 import React from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import Colors from '../constants/Colors';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 const StartScreen = props => {
   return (
     <View style={styles.screen}>
+      <Icon name="glass" size={40} color="white" />
       <View style={styles.title}>
         <Text style={styles.titleBold}>Cocktail</Text>
         <Text style={styles.titleLight}>Finder</Text>
       </View>
       <View style={styles.containerStyle}>
+        <View style={{marginLeft: 9}}>
+          <Icon name="search" size={25} color="gray" />
+        </View>
         <Button
           color={Colors.accentColor}
           title="Search your favourite cocktail!"
@@ -41,7 +47,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 8,
     backgroundColor: 'white',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
@@ -55,6 +62,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '800',
     flexDirection: 'row',
+    marginLeft: 4,
   },
   titleLight: {
     fontSize: 24,

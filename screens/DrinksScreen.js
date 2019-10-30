@@ -11,19 +11,19 @@ import {
   Button,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Colors from '../constants/Colors';
 import {addDrinkList} from '../store/actions/drinks';
 import {deleteDrinkList} from '../store/actions/drinks';
+import {addTextKey} from '../store/actions/drinks';
 
 const DrinksScreen = props => {
   const [loading, setLoading] = useState(false);
   const storeDrinks = useSelector(state => state.drinks);
   const dispatch = useDispatch();
+  const searchText = useSelector(state => state.textKey);
 
   const handleTextChange = text => {
-    if (text.length < 3) {
-      return;
-    }
     setLoading(true);
     fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${text}`)
       .then(response => response.json())
@@ -44,10 +44,17 @@ const DrinksScreen = props => {
     dispatch(deleteDrinkList([]));
   };
 
+  const addTextKeyAction = text => {
+    if (text.length >= 3) {
+      dispatch(addTextKey(text));
+    }
+  };
+
   useEffect(() => {
     props.navigation.setParams({handleTextChange});
     props.navigation.setParams({deleteDrinkListAction});
-    props.navigation.setParams({});
+    props.navigation.setParams({addTextKeyAction});
+    props.navigation.setParams({searchText});
   }, []);
 
   const renderList = itemData => {
@@ -71,7 +78,9 @@ const DrinksScreen = props => {
   return (
     <View style={styles.screen}>
       {loading ? (
-        <Text style={styles.loadingText}>Loading...</Text>
+        <View style={styles.loadingIcon}>
+          <Icon name="spinner" size={70} color="white" />
+        </View>
       ) : (
         <FlatList data={storeDrinks} renderItem={renderList} />
       )}
@@ -83,6 +92,7 @@ DrinksScreen.navigationOptions = ({navigation}) => ({
   headerTitle: (
     <TextInput
       placeholder="Search"
+      defaultValue={navigation.getParam('searchText')}
       style={{
         height: 40,
         borderColor: 'white',
@@ -96,7 +106,10 @@ DrinksScreen.navigationOptions = ({navigation}) => ({
   ),
   headerRight: () => (
     <Button
-      onPress={navigation.getParam('deleteDrinkListAction')}
+      onPress={navigation.getParam(
+        'deleteDrinkListAction',
+        'addTextKeyAction("")',
+      )}
       title="Cancel"
       color="white"
     />
@@ -134,9 +147,10 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'flex-start',
   },
-  loadingText: {
+  loadingIcon: {
     color: 'black',
     fontSize: 24,
+    alignSelf: 'center',
   },
   imgTitle: {
     flex: 1,
