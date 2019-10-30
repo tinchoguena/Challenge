@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../constants/Colors';
 import {addDrinkList} from '../store/actions/drinks';
 import {deleteDrinkList} from '../store/actions/drinks';
@@ -76,15 +77,21 @@ const DrinksScreen = props => {
     );
   };
   return (
-    <View style={styles.screen}>
-      {loading ? (
-        <View style={styles.loadingIcon}>
-          <Icon name="spinner" size={70} color="white" />
-        </View>
-      ) : (
-        <FlatList data={storeDrinks} renderItem={renderList} />
-      )}
-    </View>
+    <LinearGradient
+      colors={['#C81691', '#E33D32']}
+      start={{x: 1, y: 0}}
+      end={{x: 0, y: 1}}
+      style={styles.linearGradient}>
+      <View style={styles.screen}>
+        {loading ? (
+          <View style={styles.loadingIcon}>
+            <Icon name="spinner" size={70} color="white" />
+          </View>
+        ) : (
+          <FlatList data={storeDrinks} renderItem={renderList} />
+        )}
+      </View>
+    </LinearGradient>
   );
 };
 
@@ -115,16 +122,18 @@ DrinksScreen.navigationOptions = ({navigation}) => ({
     />
   ),
   headerStyle: {
-    backgroundColor: Colors.primaryColor,
+    backgroundColor: '#CC1D80',
   },
 });
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: Colors.primaryColor,
     flex: 1,
     alignItems: 'stretch',
     justifyContent: 'center',
+  },
+  linearGradient: {
+    flex: 1,
   },
   container: {
     justifyContent: 'space-between',
