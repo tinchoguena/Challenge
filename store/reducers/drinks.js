@@ -14,26 +14,10 @@ const drinksReducer = (state = initialState, action) => {
     case DELETE_LIST:
       return {...state, drinks: action.drinkList};
     case ADD_TEXTKEY:
-      if (action.key.length >= 3) {
-        return {...state, textKey: action.key};
-      }
-      if (action.key === '') {
-        return {...state, textKey: action.key};
-      } else {
-        null;
-      }
+      return {...state, text: action.text};
     default:
       return state;
   }
 };
 
 export default drinksReducer;
-
-// if (action.type === ADD_DRINKLIST) {
-//   return {...state, drinks: action.drinkList};
-// }
-// if (action.type === DELETE_LIST) {
-//   return {...state, drinks: action.drinkList};
-// } else {
-//   return state;
-// }

@@ -13,7 +13,6 @@ import {
 import {FlatList} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
-import Colors from '../constants/Colors';
 import {addDrinkList} from '../store/actions/drinks';
 import {deleteDrinkList} from '../store/actions/drinks';
 import {addTextKey} from '../store/actions/drinks';
@@ -22,9 +21,13 @@ const DrinksScreen = props => {
   const [loading, setLoading] = useState(false);
   const storeDrinks = useSelector(state => state.drinks);
   const dispatch = useDispatch();
-  const searchText = useSelector(state => state.textKey);
+  const searchText = useSelector(state => state.text);
 
   const handleTextChange = text => {
+    dispatch(addTextKey(text));
+    if (text.length < 3) {
+      return;
+    }
     setLoading(true);
     fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${text}`)
       .then(response => response.json())
@@ -46,17 +49,21 @@ const DrinksScreen = props => {
   };
 
   const addTextKeyAction = text => {
-    if (text.length >= 3) {
-      dispatch(addTextKey(text));
-    }
+    dispatch(addTextKey(text));
   };
 
   useEffect(() => {
-    props.navigation.setParams({handleTextChange});
-    props.navigation.setParams({deleteDrinkListAction});
-    props.navigation.setParams({addTextKeyAction});
-    props.navigation.setParams({searchText});
+    props.navigation.setParams({
+      handleTextChange,
+      deleteDrinkListAction,
+      addTextKeyAction,
+      searchText,
+    });
   }, []);
+
+  useEffect(() => {
+    props.navigation.setParams({searchText});
+  }, [searchText]);
 
   const renderList = itemData => {
     return (
@@ -99,7 +106,7 @@ DrinksScreen.navigationOptions = ({navigation}) => ({
   headerTitle: (
     <TextInput
       placeholder="Search"
-      defaultValue={navigation.getParam('searchText')}
+      value={navigation.getParam('searchText')}
       style={{
         height: 40,
         borderColor: 'white',
@@ -113,10 +120,10 @@ DrinksScreen.navigationOptions = ({navigation}) => ({
   ),
   headerRight: () => (
     <Button
-      onPress={navigation.getParam(
-        'deleteDrinkListAction',
-        'addTextKeyAction("")',
-      )}
+      onPress={() => {
+        navigation.getParam('deleteDrinkListAction')();
+        navigation.getParam('addTextKeyAction')('');
+      }}
       title="Cancel"
       color="white"
     />

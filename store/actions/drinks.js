@@ -10,6 +10,6 @@ export const deleteDrinkList = drinkList => {
   return {type: DELETE_LIST, drinkList: drinkList};
 };
 
-export const addTextKey = key => {
-  return {type: ADD_TEXTKEY, textKey: key};
+export const addTextKey = text => {
+  return {type: ADD_TEXTKEY, text};
 };
