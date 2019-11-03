@@ -1,10 +1,12 @@
 import {ADD_DRINKLIST} from '../actions/drinks';
 import {DELETE_LIST} from '../actions/drinks';
 import {ADD_TEXTKEY} from '../actions/drinks';
+import {SET_LOADING} from '../actions/drinks';
 
 const initialState = {
   drinks: [],
-  textKey: '',
+  text: '',
+  loading: false,
 };
 
 const drinksReducer = (state = initialState, action) => {
@@ -15,6 +17,8 @@ const drinksReducer = (state = initialState, action) => {
       return {...state, drinks: action.drinkList};
     case ADD_TEXTKEY:
       return {...state, text: action.text};
+    case SET_LOADING:
+      return {...state, loading: action.bool};
     default:
       return state;
   }

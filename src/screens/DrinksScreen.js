@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -16,34 +17,24 @@ import LinearGradient from 'react-native-linear-gradient';
 import {addDrinkList} from '../store/actions/drinks';
 import {deleteDrinkList} from '../store/actions/drinks';
 import {addTextKey} from '../store/actions/drinks';
+import {setLoading} from '../store/actions/drinks';
 
 const DrinksScreen = props => {
-  const [loading, setLoading] = useState(false);
   const storeDrinks = useSelector(state => state.drinks);
   const dispatch = useDispatch();
   const searchText = useSelector(state => state.text);
+  const loading = useSelector(state => state.loading);
 
   const handleTextChange = text => {
     dispatch(addTextKey(text));
     if (text.length < 3) {
       return;
     }
-    setLoading(true);
-    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${text}`)
-      .then(response => response.json())
-      .then(drinksObj => {
-        const drinksArr = drinksObj.drinks.map(drink => {
-          return {
-            id: drink.idDrink,
-            name: drink.strDrink,
-            img: drink.strDrinkThumb,
-          };
-        });
-        dispatch(addDrinkList(drinksArr));
-        setLoading(false);
-      });
+    dispatch(addDrinkList(text));
   };
-
+  const setLoding = bool => {
+    dispatch(setLoading(bool));
+  };
   const deleteDrinkListAction = () => {
     dispatch(deleteDrinkList([]));
   };
@@ -58,6 +49,7 @@ const DrinksScreen = props => {
       deleteDrinkListAction,
       addTextKeyAction,
       searchText,
+      setLoding,
     });
   }, []);
 
@@ -83,6 +75,7 @@ const DrinksScreen = props => {
       </ScrollView>
     );
   };
+
   return (
     <LinearGradient
       colors={['#C81691', '#E33D32']}
@@ -101,7 +94,14 @@ const DrinksScreen = props => {
     </LinearGradient>
   );
 };
-
+DrinksScreen.propTypes = {
+  searchText: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
+  addDrinkList: PropTypes.func.isRequired,
+  deleteDrinkList: PropTypes.func.isRequired,
+  addTextKey: PropTypes.func.isRequired,
+  setLoading: PropTypes.func.isRequired,
+};
 DrinksScreen.navigationOptions = ({navigation}) => ({
   headerTitle: (
     <TextInput
@@ -183,4 +183,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
 export default DrinksScreen;
