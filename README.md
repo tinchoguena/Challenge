@@ -1,6 +1,6 @@
 # Challenge
-FoxBox Challenge
-clone the repository
-cd directory
-run npm install or yarn install 
-run react-native run-ios
+## FoxBox Challenge
+1. clone the repository
+2. cd directory
+3. run npm install or yarn install 
+4. run react-native run-ios
