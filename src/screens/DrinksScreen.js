@@ -14,10 +14,9 @@ import {
 import {FlatList} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
-import {addDrinkList} from '../store/actions/drinks';
 import {deleteDrinkList} from '../store/actions/drinks';
 import {addTextKey} from '../store/actions/drinks';
-import {setLoading} from '../store/actions/drinks';
+import {fetchDrinks} from '../store/actions/drinks';
 
 const DrinksScreen = props => {
   const storeDrinks = useSelector(state => state.drinks);
@@ -30,11 +29,9 @@ const DrinksScreen = props => {
     if (text.length < 3) {
       return;
     }
-    dispatch(addDrinkList(text));
+    dispatch(fetchDrinks(text));
   };
-  const setLoding = bool => {
-    dispatch(setLoading(bool));
-  };
+
   const deleteDrinkListAction = () => {
     dispatch(deleteDrinkList([]));
   };
@@ -49,7 +46,6 @@ const DrinksScreen = props => {
       deleteDrinkListAction,
       addTextKeyAction,
       searchText,
-      setLoding,
     });
   }, []);
 
